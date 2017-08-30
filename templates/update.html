@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Georgia Tech Timetable</title>
+		<link rel="stylesheet" type="text/css" href="../static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/component.css" />
+		<!--[if IE]>
+  		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body class="bgcolor-3">
+		<div class="container">
+			<header class="codrops-header">
+                <h1 id="info" hidden>
+                Importing to Google Calendar...<br/><br/>Wait a minute...
+                    <div class="sk-cube-grid">
+                      <div class="sk-cube sk-cube1"></div>
+                      <div class="sk-cube sk-cube2"></div>
+                      <div class="sk-cube sk-cube3"></div>
+                      <div class="sk-cube sk-cube4"></div>
+                      <div class="sk-cube sk-cube5"></div>
+                      <div class="sk-cube sk-cube6"></div>
+                      <div class="sk-cube sk-cube7"></div>
+                      <div class="sk-cube sk-cube8"></div>
+                      <div class="sk-cube sk-cube9"></div>
+                    </div>
+                </h1>
+
+                <h1 id="info_final" hidden>Congratulations!<br/><br/>Everything has been settled.<br/><br/><a href="https://calendar.google.com">Click here</a> to open your Google Calendar.</h1>
+			</header>
+		</div>
+		<script src="../static/js/classie.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
+        <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#info").fadeIn(1000);
+                $.ajax({
+                    type: 'GET',
+                    url: '/update_calendar',
+{#                    url: '/',#}
+                    success: function () {
+                        $("#info").fadeOut(1000, function(){
+                            $("#info_final").fadeIn(1000)
+                        });
+                    }
+                });
+            });
+
+        </script>
+	</body>
+</html>
+
+</script>

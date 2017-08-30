@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Georgia Tech Timetable</title>
+		<link rel="stylesheet" type="text/css" href="../static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/component.css" />
+		<!--[if IE]>
+  		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<![endif]-->
+        <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container bgcolor-1">
+			<header class="codrops-header bgcolor-2">
+				<h1 data-aos="zoom-out">GT Timetable<br/> to <br/>Google Calendar<span><br/>Disclaimer:<br/>This is not an official site of Georgia Tech.<br/>We do not store any user information.<br/>The website is fully open-sourced.<br/></span></h1>
+			</header>
+			<section class="content" id="interface">
+                <span class="input input--haruki"  data-aos="fade-right">
+                    <input class="input__field input__field--haruki" type="text" id="usr" name="username"/>
+                    <label class="input__label input__label--haruki" for="usr">
+                        <span class="input__label-content input__label-content--haruki">Georgia Tech Username</span>
+                    </label>
+                </span>
+                <span class="input input--haruki" data-aos="fade-left">
+                    <input class="input__field input__field--haruki" type="password" id="pwd" name="password"/>
+                    <label class="input__label input__label--haruki" for="pwd">
+                        <span class="input__label-content input__label-content--haruki">Password</span>
+                    </label>
+                </span>
+                <br/>
+                <span class="input input--haruki" data-aos="fade-up" id="btn_pos">
+                    <input class="unstyled_button" id="submit_btn" type="submit" value=">"/>
+                </span>
+                <br/>
+            </section>
+		</div><!-- /container -->
+        <div class="container bgcolor-1" id="progress">
+        </div>
+		<script src="../static/js/classie.js"></script>
+
+		<script>
+			(function() {
+				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+				if (!String.prototype.trim) {
+					(function() {
+						// Make sure we trim BOM and NBSP
+						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+						String.prototype.trim = function() {
+							return this.replace(rtrim, '');
+						};
+					})();
+				}
+
+				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+					// in case the input is already filled..
+					if( inputEl.value.trim() !== '' ) {
+						classie.add( inputEl.parentNode, 'input--filled' );
+					}
+
+					// events:
+					inputEl.addEventListener( 'focus', onInputFocus );
+					inputEl.addEventListener( 'blur', onInputBlur );
+				} );
+
+				function onInputFocus( ev ) {
+					classie.add( ev.target.parentNode, 'input--filled' );
+				}
+
+				function onInputBlur( ev ) {
+					if( ev.target.value.trim() === '' ) {
+						classie.remove( ev.target.parentNode, 'input--filled' );
+					}
+				}
+			})();
+		</script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
+        <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+          requirejs.config({
+              baseUrl: '../static/aos',
+          });
+          require(['aos'], function(AOS){
+              AOS.init({
+                  easing: 'ease-in-out-sine'
+              });
+          });
+        </script>
+
+        <script>
+            function start_long_task() {
+                $("#submit_btn").fadeOut(500);
+                var usr = $('#usr').val();
+                var pwd = $('#pwd').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/submit',
+                    data: {"username":usr, "password":pwd},
+                    dataType: "json",
+                    success: function(data) {
+                        updating(data.status_url);
+                    }
+{#                    success: function(data) {#}
+{#                        alert(data)#}
+{#                        status_url = request.getResponseHeader(data);#}
+{#                        update_progress(status_url, section[0]);#}
+{#                    },#}
+{#                    error: function() {#}
+{#                        alert(data)#}
+{#                        alert('Unexpected error');#}
+{#                    }#}
+                });
+
+            }
+
+            function updating(status_url) {
+                $.getJSON(status_url, function (data) {
+                    $("#btn_pos").html(data['status']);
+                    if (data['state'] == 'PENDING' || data['state'] == 'PROGRESS') {
+                        setTimeout(function () {
+                            updating(status_url);
+                        }, 500);
+                    }
+                    if (data['status'] == 'Finished.') {
+                        $("#btn_pos").html("Redirecting to Google Calendar...");
+                        window.location.href = "/create_calendar";
+                    }
+                    if (data['status'] == 'Error: Log in failed.') {
+                        $("#btn_pos").html(data['status']+"<br/>Please refresh this page to try again.");
+
+                    }
+                });
+            }
+
+            $(function() {
+                $('#submit_btn').click(start_long_task);
+            });
+
+        </script>
+	</body>
+</html>
+
+</script>
