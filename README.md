@@ -2,7 +2,7 @@
 
 This is a web application for Georgia Tech students to import their time schedules into Google Calendar. 
 
-It will be hosted on https://www.doki-feeling.com.
+It is currently hosted on https://www.doki-feeling.com.
 
 ## Requirements
 
