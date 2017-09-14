@@ -169,7 +169,8 @@ def get_timetable(self, username, password):
 
     self.update_state(state='PROGRESS', meta={'status': 'Logging into Georgia Tech Central Authentication System...'})
     input_password.submit()
-
+    self.update_state(state='PROGRESS', meta={'status': 'By-passing Two-Factor Authentication...'})
+    
     try:
         WebDriverWait(driver, 5).until(exp_cond.title_contains('BuzzPort'))
     except TimeoutException:
