@@ -6,7 +6,7 @@ It will be hosted on https://www.doki-feeling.com.
 
 ## Requirements
 
-`pip3 install flask flask_sqlalchemy celery selenium apiclient oauth2client httplib4 bs4`
+`pip3 install flask flask_sqlalchemy celery selenium apiclient oauth2client httplib2 bs4`
 
 `celery` requires [RabbitMQ](https://www.rabbitmq.com) and [SQLite](https://www.sqlite.org).
 
